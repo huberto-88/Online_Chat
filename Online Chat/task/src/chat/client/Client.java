@@ -16,7 +16,7 @@ public class Client {
     private Socket socket;
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         new Client().run();
     }
 
@@ -30,8 +30,8 @@ public class Client {
         }
         System.out.println("Client started!");
 
-        ClientSender sender = new ClientSender(dos);
-        ClientReceiver receiver = new ClientReceiver(dis);
+        ClientSender sender = new ClientSender(socket, dos);
+        ClientReceiver receiver = new ClientReceiver(socket, dis);
         executorService.submit(sender);
         executorService.submit(receiver);
     }

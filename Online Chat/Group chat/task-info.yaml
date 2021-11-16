@@ -365,8 +365,24 @@ files:
     }
   learner_created: false
 feedback_link: https://hyperskill.org/projects/49/stages/268/implement#comment
-status: Solved
+status: Failed
 feedback:
-  message: Congratulations!
-  time: Sat, 13 Nov 2021 11:38:13 UTC
+  message: |-
+    Wrong answer in test #1
+
+    Can&#39;t get the &quot;Client started!
+    Server: write your name&quot; messages
+
+    Please find below the output of your program during this failed test.
+
+    ---
+
+    Server started!
+    Client 1 connected!
+    Client started!
+    Client 2 connected!
+    Client started!
+    Client 3 connected!
+    Client started!
+  time: Tue, 16 Nov 2021 15:19:40 UTC
 record: 3

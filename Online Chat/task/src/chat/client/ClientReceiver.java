@@ -1,29 +1,30 @@
 package chat.client;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 public class ClientReceiver implements Runnable {
     private DataInputStream dis;
+    private Socket socket;
 
-    public ClientReceiver(DataInputStream dis) {
+    public ClientReceiver(Socket socket, DataInputStream dis) {
+        this.socket = socket;
         this.dis = dis;
     }
 
     @Override
     public void run() {
-        while (true) {
-         //   for (int i = 0; i < 2; i++) {
-                String receivedMsg;
-                try {
-                    synchronized (this) {
-                        receivedMsg = dis.readUTF();
-                        System.out.println(receivedMsg);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-        //    }
+        while (!socket.isClosed()) {
+            String receivedMsg;
+            try {
+                receivedMsg = dis.readUTF();
+                System.out.println(receivedMsg);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

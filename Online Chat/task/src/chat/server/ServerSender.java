@@ -16,7 +16,6 @@ public class ServerSender implements Runnable {
     @Override
     public void run() {
         while (true) {
-          //  for (int i = 0; i < 2; i++) {
                 synchronized (this) {
                     msg = scanner.nextLine();
                     try {
@@ -26,7 +25,5 @@ public class ServerSender implements Runnable {
                     }
                 }
             }
-      //  }
-
     }
 }

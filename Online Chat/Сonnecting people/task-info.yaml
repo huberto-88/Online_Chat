@@ -258,9 +258,12 @@ files:
 - name: src/chat/server/ServerReceiver.java
   visible: true
   learner_created: true
+- name: src/chat/server/ReceiverSender.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/49/stages/267/implement#comment
 status: Solved
 feedback:
   message: Congratulations!
-  time: Mon, 15 Nov 2021 23:55:30 UTC
+  time: Tue, 16 Nov 2021 15:07:31 UTC
 record: 2
