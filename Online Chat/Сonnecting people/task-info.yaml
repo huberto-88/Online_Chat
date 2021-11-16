@@ -1,0 +1,266 @@
+type: edu
+files:
+- name: src/chat/client/Client.java
+  visible: true
+  text: |
+    package chat.client;
+
+
+    import java.io.DataInputStream;
+    import java.io.DataOutputStream;
+    import java.io.IOException;
+    import java.net.Socket;
+    import java.net.SocketException;
+    import java.util.Scanner;
+
+    public class Client {
+
+        private static final String SERVER_ADDRESS = "127.0.0.1";
+        private static final int SERVER_PORT = 34520;
+
+        private static DataInputStream input;private static DataOutputStream output;
+        private static Socket socket;
+
+        public static void main(String[] args) throws InterruptedException {
+
+            try {
+                socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                input = new DataInputStream(socket.getInputStream());
+                output = new DataOutputStream(socket.getOutputStream());
+                System.out.println("Client started!");
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+
+            try {
+                socket.setSoTimeout(1000);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+
+            Sender sender = new Sender();
+            Receiver receiver = new Receiver();
+            receiver.start();
+            sender.start();
+
+            Thread.sleep(1000);
+
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        static class Receiver extends Thread {
+
+            @Override
+            public void run() {
+            //    while (true)
+                for (int i = 0; i < 2; i++){
+                    String recivedMsg;
+                    try {
+                        synchronized (this) {
+                            recivedMsg = input.readUTF();
+                            System.out.println(recivedMsg);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        static class Sender extends Thread {
+            volatile Scanner scanner = new Scanner(System.in);
+
+            @Override
+            public void run() {
+                   while (true) {
+              //  for (int i = 0; i < 1; i++){
+                    try {
+                        synchronized (this) {
+                            String msg = scanner.nextLine();
+                            output.writeUTF(msg);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+  learner_created: false
+- name: src/chat/server/Server.java
+  visible: true
+  text: |
+    package chat.server;
+
+    import java.io.*;
+    import java.net.*;
+    import java.util.Scanner;
+
+    public class Server {
+
+        private static final int PORT = 34520;
+        static DataInputStream input;
+        static DataOutputStream output;
+
+        public static void main(String[] args) {
+
+            try (ServerSocket server = new ServerSocket(PORT)) {
+            //   while (true) {
+                    Socket socket = server.accept();
+                    System.out.println("Server started!");
+
+                    input = new DataInputStream(socket.getInputStream());
+                    output = new DataOutputStream(socket.getOutputStream());
+                    Receiver receiver = new Receiver();
+                    Sender sender = new Sender();
+                    receiver.start();
+                    sender.start();
+
+                    Thread.sleep(1000);
+
+            //       }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        static class Receiver extends Thread {
+            private String msg;
+
+            public void run() {
+                try {
+                //    while ((msg = input.readUTF()) != null) {
+                    for (int i = 0; i < 2; i++){
+                        synchronized (this) {
+                            msg = input.readUTF();
+                            System.out.println(msg);
+                        }
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        static class Sender extends Thread {
+            private String msg;
+            private Scanner scanner = new Scanner(System.in);
+
+            @Override
+            public void run() {
+            //    while (true) {
+                for (int i = 0; i < 2; i++){
+                    synchronized (this) {
+                        msg = scanner.nextLine();
+                        try {
+                            output.writeUTF(msg);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+  learner_created: false
+- name: test/MainTest.java
+  visible: true
+  learner_created: false
+- name: test/Tests.java
+  visible: false
+  learner_created: false
+- name: src/chat/client/ClientReceiver.java
+  visible: true
+  text: |-
+    package chat.client;
+
+    import java.io.DataInputStream;
+    import java.io.DataOutputStream;
+    import java.io.IOException;
+
+    public class Receiver implements Runnable {
+        private DataInputStream dis;
+        private DataOutputStream dos;
+
+        public Receiver(DataInputStream dis, DataOutputStream dos) {
+            this.dis = dis;
+            this.dos = dos;
+        }
+
+        @Override
+        public void run() {
+          //  while (true) {
+                for (int i = 0; i < 2; i++) {
+                    String receivedMsg;
+                    try {
+                        synchronized (this) {
+                            receivedMsg = dis.readUTF();
+                            System.out.println(receivedMsg);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+          //  }
+        }
+    }
+  learner_created: true
+- name: src/chat/client/ClientSender.java
+  visible: true
+  text: |
+    package chat.client;
+
+    import java.io.DataInputStream;
+    import java.io.DataOutputStream;
+    import java.io.IOException;
+    import java.util.Scanner;
+
+    public class Sender implements Runnable {
+        private DataInputStream dis;
+        private DataOutputStream dos;
+        private final Scanner scanner = new Scanner(System.in);
+
+        public Sender(DataInputStream dis, DataOutputStream dos) {
+            this.dis = dis;
+            this.dos = dos;
+        }
+
+        @Override
+        public void run() {
+          //  while (true) {
+                for (int i = 0; i < 1; i++) {
+                    try {
+                        synchronized (this) {
+                            String msg = scanner.nextLine();
+                            dos.writeUTF(msg);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            //    }
+            }
+        }
+    }
+  learner_created: true
+- name: src/chat/server/ServerSender.java
+  visible: true
+  learner_created: true
+- name: src/chat/server/ServerReceiver.java
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/projects/49/stages/267/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Mon, 15 Nov 2021 23:55:30 UTC
+record: 2

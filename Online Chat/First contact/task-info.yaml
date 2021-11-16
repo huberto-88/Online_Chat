@@ -1,0 +1,29 @@
+type: edu
+files:
+- name: test/Tests.java
+  visible: true
+  learner_created: false
+- name: src/chat/client/Client.java
+  visible: true
+  learner_created: true
+- name: src/chat/server/Server.java
+  visible: true
+  learner_created: true
+- name: src/chat/server/ClientReceiver.java
+  visible: true
+  learner_created: true
+- name: src/chat/server/ClientSender.java
+  visible: true
+  learner_created: true
+- name: src/chat/client/ClientSender.java
+  visible: true
+  learner_created: true
+- name: src/chat/client/ClientReceiver.java
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/projects/49/stages/266/implement#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Sun, 14 Nov 2021 13:59:48 UTC
+record: 1
